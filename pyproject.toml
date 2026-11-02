@@ -1,0 +1,61 @@
+[project]
+name = "mergechat"
+version = "0.1.0"
+description = "Passive Max chat monitoring and JEV order detection spike"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "aiosqlite>=0.22.1",
+    "alembic>=1.20.1",
+    "cryptography>=50.0.2",
+    "fastapi>=0.162.0",
+    "httpx>=0.28.1",
+    "maxapi-python>=2.4.1",
+    "pydantic-settings>=2.16.2",
+    "python-dotenv>=1.2.4",
+    "sqlalchemy[asyncio]>=2.1.6",
+    "typesafe-sdk>=0.7.5",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[project.scripts]
+mergechat = "mergechat:main"
+sandbox = "sandbox:main"
+
+[build-system]
+requires = ["uv_build>=0.12.21,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+wheel-include = ["src/mergechat/web/**"]
+
+[dependency-groups]
+dev = [
+    "mypy>=2.4.1",
+    "pytest>=9.2.0",
+    "pytest-asyncio>=1.4.1.post1",
+    "ruff>=0.17.3",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+ignore = ["B008", "RUF012"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/sandbox/*" = ["E501", "F401", "F821", "I001", "RUF003"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.mypy]
+python_version = "3.14"
+check_untyped_defs = true
+ignore_missing_imports = true
+warn_unused_ignores = false
+plugins = ["pydantic.mypy"]
